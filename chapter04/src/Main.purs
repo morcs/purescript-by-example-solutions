@@ -4,10 +4,13 @@ import Prelude
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Console (CONSOLE, log)
 
-import Data.Array (null, filter, (..))
+import Data.Array (null, filter, length, (..))
 import Data.Array.Partial (head, tail)
+import Data.Foldable (product)
 import Data.Ring
 import Partial.Unsafe (unsafePartial)
+
+import Control.MonadZero (guard)
 
 -- 4.4.1 (Easy) Write a recursive function which returns true if and only if its
 -- input is an even integer.
@@ -58,3 +61,16 @@ main :: forall e. Eff (console :: CONSOLE | e) Unit
 main = do
   log "Hello sailor!"
 
+-- 4.11.1
+-- (Easy) Use the factors function to define a function isPrime which 
+-- tests if its integer argument is prime or not.
+factors :: Int -> Array (Array Int)
+factors n = do
+  i <- 1 .. n
+  j <- i .. n
+  guard $ i * j == n
+  pure [i, j]
+
+isPrime :: Int -> Boolean
+isPrime n =
+  length (factors n) == 1
